@@ -1,8 +1,8 @@
 <div 
-    class="flex flex-col bg-indigo-900 h-screen"
+    class="flex flex-col bg-gray-800 h-screen"
     x-data="{
-        showSubscribe: false,
-        showSuccess: false,
+        showSubscribe: @entangle('showSubscribe'),
+        showSuccess: @entangle('showSuccess'),
     }">
     <nav class="pt-5 flex justify-between container mx-auto text-indigo-200">
         <a href="/" class="text-4xl font-bold">
@@ -32,7 +32,7 @@
         </div>
     </div>
         
-    <x-modal trigger="showSubscribe">
+    <x-modal class="bg-indigo-400" trigger="showSubscribe">
         <p class="text-white font-extrabold text-5xl text-center">
                 Register you email.
             </p>
@@ -44,7 +44,7 @@
                     type="email" 
                     name="email" 
                     placeholder="Email address"
-                    wire:model="email"
+                    wire:model.defer="email"
                 >
                 </x-input>
                 <span class="text-gray-100 text-xs">
@@ -55,8 +55,13 @@
                     }}
                     
                 </span>
-                <x-button class="px-5 py-3 mt-5 w-80 bg-blue-500 justify-center">
-                    Get In
+                <x-button class="px-5 py-3 mt-5 w-80 bg-gray-800 justify-center">
+                    <span class="animate-spin" wire:loading wire:target="subscribe">
+                        &#9696;
+                    </span>
+                    <span wire:loading.remove wire:target="subscribe">
+                        Get In
+                    </span>
                 </x-button>
             </form>
     </x-modal>
@@ -68,8 +73,14 @@
             <p class="text-white font-extrabold text-5xl text-center mt-16">
                 Great!
             </p>
-            <p class="text-white text-3xl text-center">
-                See you in your inbox.
-            </p>
+            @if (request()->has('verified') && request()->verified == 1)
+                <p class="text-white text-3xl text-center">
+                    Email confirmed, good job.
+                </p>
+            @else
+                <p class="text-white text-3xl text-center">
+                    See you in your inbox.
+                </p>
+            @endif
     </x-modal>
 </div>
